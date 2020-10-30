@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>ad77897a-c5d0-48a0-96b3-003a3e2e313c</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20201025122920_AddFKBetweenCompanyAndSuperSupervisor.cs" />
+    <Compile Remove="Migrations\20201025122920_AddFKBetweenCompanyAndSuperSupervisor.Designer.cs" />
+    <Compile Remove="Migrations\20201025123606_AddFKBetweenCompanyAndSuperSupervisor.cs" />
+    <Compile Remove="Migrations\20201025123606_AddFKBetweenCompanyAndSuperSupervisor.Designer.cs" />
+    <Compile Remove="Migrations\20201025131430_AddFKBetweenCompanyAndSuperSupervisor2.cs" />
+    <Compile Remove="Migrations\20201025131430_AddFKBetweenCompanyAndSuperSupervisor2.Designer.cs" />
+    <Compile Remove="Migrations\20201025181344_Test.cs" />
+    <Compile Remove="Migrations\20201025181344_Test.Designer.cs" />
+    <Compile Remove="Migrations\20201025182605_AddFKBetweenCompanyAndSuperSupervisor3.cs" />
+    <Compile Remove="Migrations\20201025182605_AddFKBetweenCompanyAndSuperSupervisor3.Designer.cs" />
+    <Compile Remove="Migrations\20201025182855_AddFKBetweenCompanyAndSuperSupervisor3.cs" />
+    <Compile Remove="Migrations\20201025182855_AddFKBetweenCompanyAndSuperSupervisor3.Designer.cs" />
+    <Compile Remove="Migrations\20201025202410_AddTaskAssignmentGroupToDB4.cs" />
+    <Compile Remove="Migrations\20201025202410_AddTaskAssignmentGroupToDB4.Designer.cs" />
+    <Compile Remove="Migrations\20201025205049_AddCommentToDB.cs" />
+    <Compile Remove="Migrations\20201025205049_AddCommentToDB.Designer.cs" />
+    <Compile Remove="Migrations\20201025212321_AddTaskAssignmentEmployeeToDB.cs" />
+    <Compile Remove="Migrations\20201025212321_AddTaskAssignmentEmployeeToDB.Designer.cs" />
+    <Compile Remove="Migrations\20201028110339_Test.cs" />
+    <Compile Remove="Migrations\20201028110339_Test.Designer.cs" />
+    <Compile Remove="Migrations\20201028111330_Test.cs" />
+    <Compile Remove="Migrations\20201028111330_Test.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.9">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
+  </ItemGroup>
+
+
+</Project>
