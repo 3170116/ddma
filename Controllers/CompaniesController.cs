@@ -31,7 +31,7 @@ namespace ddma.Controllers
         [HttpGet("{id}")]
         public Company GetCompany(int id)
         {
-            var company = _context.Companies.Single(x => x.Id == id);
+            var company = _context.Companies.SingleOrDefault(x => x.Id == id);
 
             if (company == null)
             {
@@ -45,7 +45,12 @@ namespace ddma.Controllers
         [HttpPut("{id}")]
         public Company PutCompany(int id, Company company)
         {
-            var editCompany = _context.Companies.Single(x => x.Id == id);
+            var editCompany = _context.Companies.SingleOrDefault(x => x.Id == id);
+
+            if (editCompany == null || !company.IsValid())
+            {
+                return new Company();
+            }
 
             editCompany.Name = company.Name;
             editCompany.TimeZone = company.TimeZone;
@@ -60,6 +65,12 @@ namespace ddma.Controllers
         [HttpPost]
         public Company PostCompany(Company company)
         {
+
+            if (!company.IsValid())
+            {
+                return new Company();
+            }
+
             _context.Companies.Add(company);
             _context.SaveChanges();
 

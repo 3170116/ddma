@@ -21,5 +21,9 @@ namespace ddma.Models
 
         public virtual ICollection<TaskAssignment> TaskAssignments { get; set; }
 
+        public bool IsValid()
+        {
+            return !String.IsNullOrEmpty(Name);
+        }
     }
 }

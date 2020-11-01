@@ -44,5 +44,10 @@ namespace ddma.Models
             }
         }
 
+        public bool IsValid()
+        {
+            return !String.IsNullOrEmpty(Email) && !String.IsNullOrEmpty(NickName);
+        }
+
     }
 }

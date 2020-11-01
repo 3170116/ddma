@@ -31,5 +31,10 @@ namespace ddma.Models
             return Users.Where(x => x.RoleId == Enums.UserRole.EMPLOYEE).ToList();
         }
 
+        public bool IsValid()
+        {
+            return !String.IsNullOrEmpty(Name) && !String.IsNullOrEmpty(TimeZone);
+        }
+
     }
 }

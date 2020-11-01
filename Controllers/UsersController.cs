@@ -53,7 +53,14 @@ namespace ddma.Controllers
                 return new Company();
             }
 
-            return _context.Companies.Include("Users").Include("TaskAssignmentGroups").Single(x => x.Id == user.CompanyId);
+            var company = _context.Companies.Include("Users").Include("TaskAssignmentGroups").SingleOrDefault(x => x.Id == user.CompanyId);
+
+            if (company == null)
+            {
+                return new Company();
+            }
+
+            return company;
         }
 
         /// <summary>
@@ -64,6 +71,11 @@ namespace ddma.Controllers
         [HttpPut("{id}")]
         public User PutUser(int id, User user)
         {
+
+            if (!user.IsValid())
+            {
+                return new User();
+            }
 
             var editUser = _context.Users.SingleOrDefault(x => x.Id == id);
 
@@ -89,6 +101,11 @@ namespace ddma.Controllers
         [HttpPost("{roleId}")]
         public User PostUser(int roleId, User user)
         {
+
+            if (!user.IsValid())
+            {
+                return new User();
+            }
 
             var company = _context.Companies.Include(x => x.Users).Single(x => x.Id == user.CompanyId);
 

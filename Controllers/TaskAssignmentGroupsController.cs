@@ -59,7 +59,12 @@ namespace ddma.Controllers
         [HttpPut("{id}")]
         public TaskAssignmentGroup PutTaskAssignmentGroup(int id, TaskAssignmentGroup taskAssignmentGroup)
         {
-            var editTaskGroup = _context.TaskAssignmentGroups.Single(x => x.Id == id);
+            var editTaskGroup = _context.TaskAssignmentGroups.SingleOrDefault(x => x.Id == id);
+
+            if (editTaskGroup == null || !taskAssignmentGroup.IsValid())
+            {
+                return new TaskAssignmentGroup();
+            }
 
             editTaskGroup.Name = taskAssignmentGroup.Name;
             _context.SaveChanges();
@@ -76,10 +81,17 @@ namespace ddma.Controllers
         [HttpPost]
         public TaskAssignmentGroup PostTaskAssignmentGroup(TaskAssignmentGroup taskAssignmentGroup)
         {
+
+            if (!taskAssignmentGroup.IsValid())
+            {
+                return new TaskAssignmentGroup();
+            }
+
             _context.TaskAssignmentGroups.Add(taskAssignmentGroup);
             _context.SaveChanges();
 
             return taskAssignmentGroup;
+
         }
 
         // DELETE: api/TaskAssignmentGroups/5

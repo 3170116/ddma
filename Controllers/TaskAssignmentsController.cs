@@ -51,7 +51,7 @@ namespace ddma.Controllers
         {
             var editTask = _context.TaskAssignments.SingleOrDefault(x => x.Id == id);
 
-            if (editTask == null)
+            if (editTask == null || !taskAssignment.IsValid())
             {
                 return new TaskAssignment();
             }
@@ -77,6 +77,12 @@ namespace ddma.Controllers
         [HttpPost("{priorityId}")]
         public TaskAssignment PostTaskAssignment(int priorityId, TaskAssignment taskAssignment)
         {
+
+            if (!taskAssignment.IsValid())
+            {
+                return new TaskAssignment();
+            }
+
             taskAssignment.setPriority(priorityId);
             taskAssignment.setStatus(0);
 
@@ -86,6 +92,7 @@ namespace ddma.Controllers
             _context.SaveChanges();
 
             return taskAssignment;
+
         }
 
         // DELETE: api/TaskAssignments/5
