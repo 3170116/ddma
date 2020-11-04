@@ -44,7 +44,8 @@ namespace ddma.Controllers
 
             if (company == null)
             {
-                return new List<TaskAssignment>();
+                HttpContext.Response.StatusCode = 404;
+                return null;
             }
 
             IList<TaskAssignment> result = new List<TaskAssignment>();
@@ -82,8 +83,9 @@ namespace ddma.Controllers
             //ελέγχουμε αν ανήκει ο συγκεκριμένος χρήστης στην εταιρεία.
             var company = _context.Companies.Include("Users").SingleOrDefault(x => x.Id == companyId);
 
-            if (company == null || !company.Users.Any(x => x.Id == taskAssignmentUser.UserId && x.RoleId == Enums.UserRole.EMPLOYEE))
+            if (company == null || !company.Users.Any(x => x.Id == taskAssignmentUser.UserId))
             {
+                HttpContext.Response.StatusCode = 404;
                 return 0;
             }
 
@@ -107,6 +109,7 @@ namespace ddma.Controllers
 
             if (taskAssignmentUser == null)
             {
+                HttpContext.Response.StatusCode = 404;
                 return 0;
             }
 

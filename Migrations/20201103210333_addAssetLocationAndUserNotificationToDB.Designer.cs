@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ddma.Models;
 
 namespace ddma.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201103210333_addAssetLocationAndUserNotificationToDB")]
+    partial class addAssetLocationAndUserNotificationToDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,6 +36,9 @@ namespace ddma.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsVirtual")
+                        .HasColumnType("bit");
 
                     b.Property<int?>("LocationId")
                         .HasColumnType("int");
@@ -211,40 +216,6 @@ namespace ddma.Migrations
                     b.ToTable("TaskAssignmentUsers");
                 });
 
-            modelBuilder.Entity("ddma.Models.TaskLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TaskAssignmentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TaskUserType")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TaskAssignmentId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("TaskLog");
-                });
-
             modelBuilder.Entity("ddma.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -359,21 +330,6 @@ namespace ddma.Migrations
 
                     b.HasOne("ddma.Models.User", "User")
                         .WithMany("TaskAssignmentUsers")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ddma.Models.TaskLog", b =>
-                {
-                    b.HasOne("ddma.Models.TaskAssignment", "TaskAssignment")
-                        .WithMany("TaskLogs")
-                        .HasForeignKey("TaskAssignmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ddma.Models.User", "User")
-                        .WithMany("TaskLogs")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

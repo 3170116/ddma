@@ -31,11 +31,12 @@ namespace ddma.Controllers
         [HttpGet("{id}")]
         public Company GetCompany(int id)
         {
-            var company = _context.Companies.SingleOrDefault(x => x.Id == id);
+            var company = _context.Companies.Include(x => x.Users).SingleOrDefault(x => x.Id == id);
 
             if (company == null)
             {
-                return new Company();
+                HttpContext.Response.StatusCode = 404;
+                return null;
             }
 
             return company;
@@ -47,9 +48,16 @@ namespace ddma.Controllers
         {
             var editCompany = _context.Companies.SingleOrDefault(x => x.Id == id);
 
-            if (editCompany == null || !company.IsValid())
+            if (editCompany == null)
             {
-                return new Company();
+                HttpContext.Response.StatusCode = 404;
+                return null;
+            }
+
+            if (!company.IsValid())
+            {
+                HttpContext.Response.StatusCode = 400;
+                return null;
             }
 
             editCompany.Name = company.Name;
@@ -68,7 +76,8 @@ namespace ddma.Controllers
 
             if (!company.IsValid())
             {
-                return new Company();
+                HttpContext.Response.StatusCode = 400;
+                return null;
             }
 
             _context.Companies.Add(company);
@@ -85,6 +94,7 @@ namespace ddma.Controllers
 
             if (company == null)
             {
+                HttpContext.Response.StatusCode = 404;
                 return 0;
             }
 

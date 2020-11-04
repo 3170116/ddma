@@ -20,7 +20,6 @@ namespace ddma.Controllers
             _context = context;
         }
 
-
         // GET: api/Comments/5
         /// <summary>
         /// Φέρνει τα comments αυτού του task.
@@ -44,10 +43,18 @@ namespace ddma.Controllers
         [HttpPost]
         public Comment PostComment(Comment comment)
         {
+
+            if (!comment.IsValid())
+            {
+                HttpContext.Response.StatusCode = 400;
+                return null;
+            }
+
             _context.Comments.Add(comment);
             _context.SaveChanges();
 
             return comment;
+
         }
 
         // DELETE: api/Comments/5
@@ -63,6 +70,7 @@ namespace ddma.Controllers
 
             if (comment == null)
             {
+                HttpContext.Response.StatusCode = 404;
                 return 0;
             }
 

@@ -27,6 +27,10 @@ namespace ddma.Models
 
         public ICollection<TaskAssignmentUser> TaskAssignmentUsers { get; set; }
 
+        public ICollection<UserNotification> UserNotifications { get; set; }
+
+        public ICollection<TaskLog> TaskLogs { get; set; }
+
 
         public void SetRole(int roleId)
         {

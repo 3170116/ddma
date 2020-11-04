@@ -34,6 +34,9 @@ namespace ddma.Models
 
         public virtual ICollection<Comment> Comments { get; set; }
 
+        public virtual ICollection<TaskLog> TaskLogs { get; set; }
+
+
         public void setStatus(int statusId)
         {
             switch (statusId)

@@ -25,5 +25,10 @@ namespace ddma.Models
 
         public virtual TaskAssignment TaskAssignment { get; set; }
 
+        public bool IsValid()
+        {
+            return !String.IsNullOrEmpty(Body);
+        }
+
     }
 }

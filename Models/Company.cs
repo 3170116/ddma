@@ -21,9 +21,16 @@ namespace ddma.Models
 
         public virtual ICollection<TaskAssignmentGroup> TaskAssignmentGroups { get; set; }
 
+        public virtual ICollection<Asset> Assets { get; set; }
+
         public User GetSuperSupervisor()
         {
             return Users.Single(x => x.RoleId == Enums.UserRole.SUPERSUPERVISOR);
+        }
+
+        public IList<User> GetSupervisors()
+        {
+            return Users.Where(x => x.RoleId == Enums.UserRole.SUPERVISOR).ToList();
         }
 
         public IList<User> GetEmployees()

@@ -33,7 +33,8 @@ namespace ddma.Controllers
 
             if (taskAssignment == null)
             {
-                return new TaskAssignment();
+                HttpContext.Response.StatusCode = 404;
+                return null;
             }
 
             return taskAssignment;
@@ -51,9 +52,16 @@ namespace ddma.Controllers
         {
             var editTask = _context.TaskAssignments.SingleOrDefault(x => x.Id == id);
 
-            if (editTask == null || !taskAssignment.IsValid())
+            if (editTask == null)
             {
-                return new TaskAssignment();
+                HttpContext.Response.StatusCode = 404;
+                return null;
+            }
+
+            if (!taskAssignment.IsValid())
+            {
+                HttpContext.Response.StatusCode = 400;
+                return null;
             }
 
             editTask.Title = taskAssignment.Title;
@@ -80,7 +88,8 @@ namespace ddma.Controllers
 
             if (!taskAssignment.IsValid())
             {
-                return new TaskAssignment();
+                HttpContext.Response.StatusCode = 400;
+                return null;
             }
 
             taskAssignment.setPriority(priorityId);
@@ -108,6 +117,7 @@ namespace ddma.Controllers
 
             if (taskAssignment == null)
             {
+                HttpContext.Response.StatusCode = 404;
                 return 0;
             }
 

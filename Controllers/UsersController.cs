@@ -32,7 +32,8 @@ namespace ddma.Controllers
 
             if (comapny == null)
             {
-                return new List<User>();
+                HttpContext.Response.StatusCode = 404;
+                return null;
             }
 
             return comapny.Users.ToList();
@@ -50,14 +51,16 @@ namespace ddma.Controllers
 
             if (user == null)
             {
-                return new Company();
+                HttpContext.Response.StatusCode = 404;
+                return null;
             }
 
             var company = _context.Companies.Include("Users").Include("TaskAssignmentGroups").SingleOrDefault(x => x.Id == user.CompanyId);
 
             if (company == null)
             {
-                return new Company();
+                HttpContext.Response.StatusCode = 404;
+                return null;
             }
 
             return company;
@@ -74,14 +77,16 @@ namespace ddma.Controllers
 
             if (!user.IsValid())
             {
-                return new User();
+                HttpContext.Response.StatusCode = 400;
+                return null;
             }
 
             var editUser = _context.Users.SingleOrDefault(x => x.Id == id);
 
             if (editUser == null)
             {
-                return new User();
+                HttpContext.Response.StatusCode = 404;
+                return null;
             }
 
             editUser.PasswordHash = user.PasswordHash;
@@ -104,14 +109,22 @@ namespace ddma.Controllers
 
             if (!user.IsValid())
             {
-                return new User();
+                HttpContext.Response.StatusCode = 400;
+                return null;
             }
 
             var company = _context.Companies.Include(x => x.Users).Single(x => x.Id == user.CompanyId);
 
-            if (company == null || _context.Users.Any(x => x.Email == user.Email))
+            if (company == null)
             {
-                return new User();
+                HttpContext.Response.StatusCode = 404;
+                return null;
+            }
+
+            if (_context.Users.Any(x => x.Email == user.Email))
+            {
+                HttpContext.Response.StatusCode = 400;
+                return null;
             }
 
             user.SetRole(roleId);
@@ -136,6 +149,7 @@ namespace ddma.Controllers
 
             if (user == null)
             {
+                HttpContext.Response.StatusCode = 404;
                 return 0;
             }
 

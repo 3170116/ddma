@@ -21,5 +21,9 @@ namespace ddma.Models
         public DbSet<User> Users { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<TaskAssignmentUser> TaskAssignmentUsers { get; set; }
+        public DbSet<Asset> Assets { get; set; }
+        public DbSet<UserNotification> UserNotifications { get; set; }
+        public DbSet<Location> Locations { get; set; }
+
     }
 }
