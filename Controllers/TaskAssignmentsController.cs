@@ -81,7 +81,7 @@ namespace ddma.Controllers
         /// </summary>
         /// <param name="taskAssignment"></param>
         /// <returns></returns>
-        [HttpPost("{priorityId}")]
+        [HttpPost]
         public TaskAssignment PostTaskAssignment(TaskAssignment taskAssignment)
         {
 

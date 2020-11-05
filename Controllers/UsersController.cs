@@ -20,9 +20,6 @@ namespace ddma.Controllers
             _context = context;
         }
 
-        /// <summary>
-        /// Θα καλείται όταν κάνει ο χρήστης login.
-        /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
@@ -51,7 +48,7 @@ namespace ddma.Controllers
         }
 
         /// <summary>
-        /// Θα καλείται όταν ο employee κάνει edit το προφίλ του ή θέλει να αλλάξει τα credentials του.
+        /// Θα καλείται όταν ο χρήστης κάνει edit το προφίλ του ή θέλει να αλλάξει τα credentials του.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

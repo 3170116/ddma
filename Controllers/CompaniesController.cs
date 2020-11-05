@@ -63,7 +63,7 @@ namespace ddma.Controllers
         }
 
         // PUT: /companies/{id}/taskAssignmentGroups
-        [HttpGet("{id}/users")]
+        [HttpGet("{id}/taskAssignmentGroups")]
         public IEnumerable<TaskAssignmentGroup> GetTaskAssignmentGroups(int id)
         {
             var company = _context.Companies.Include(x => x.TaskAssignmentGroups).SingleOrDefault(x => x.Id == id);
@@ -160,6 +160,46 @@ namespace ddma.Controllers
             _context.SaveChanges();
 
             return company;
+        }
+
+        // POST: api/1/TaskAssignmentUsers
+        /// <summary>
+        /// Θα καλείται όταν κάνει ανάθεσει ο super-supervisor ή κάποιος supervisor ένα task σε έναν employee.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="taskAssignmentUser"></param>
+        /// <returns></returns>
+        [HttpPost("{id}/TaskAssignmentUsers")]
+        public int PostTaskAssignmentUser(int id, TaskAssignmentUser taskAssignmentUser)
+        {
+
+            //ελέγχουμε αν έχει γίνει ήδη assign αυτό το task σε αυτόν τον χρήστη
+            var newTaskAssignmentUser = _context.TaskAssignmentUsers.SingleOrDefault(x => x.TaskAssignmentId == taskAssignmentUser.TaskAssignmentId && x.UserId == taskAssignmentUser.UserId);
+
+            if (newTaskAssignmentUser != null)
+            {
+                HttpContext.Response.StatusCode = 400;
+                return newTaskAssignmentUser.Id;
+            }
+
+            //ελέγχουμε αν ανήκει ο συγκεκριμένος χρήστης στην εταιρεία.
+            var company = _context.Companies.Include("Users").SingleOrDefault(x => x.Id == id);
+
+            if (company == null || !company.Users.Any(x => x.Id == taskAssignmentUser.UserId))
+            {
+                HttpContext.Response.StatusCode = 404;
+                return 0;
+            }
+
+
+            taskAssignmentUser.AssignedAt = DateTime.UtcNow;
+
+            _context.TaskAssignmentUsers.Add(taskAssignmentUser);
+            _context.SaveChanges();
+
+
+            return taskAssignmentUser.Id;
+
         }
 
         // DELETE: /Companies/{id}
