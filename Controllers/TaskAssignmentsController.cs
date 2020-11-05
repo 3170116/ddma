@@ -79,11 +79,10 @@ namespace ddma.Controllers
         /// <summary>
         /// Θα καλείται όταν προσθέτει ο χρήστης ένα task.
         /// </summary>
-        /// <param name="priorityId"></param>
         /// <param name="taskAssignment"></param>
         /// <returns></returns>
         [HttpPost("{priorityId}")]
-        public TaskAssignment PostTaskAssignment(int priorityId, TaskAssignment taskAssignment)
+        public TaskAssignment PostTaskAssignment(TaskAssignment taskAssignment)
         {
 
             if (!taskAssignment.IsValid())
@@ -92,7 +91,6 @@ namespace ddma.Controllers
                 return null;
             }
 
-            taskAssignment.setPriority(priorityId);
             taskAssignment.setStatus(0);
 
             taskAssignment.CreatedAt = DateTime.UtcNow;

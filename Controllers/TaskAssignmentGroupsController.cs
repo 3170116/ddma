@@ -20,16 +20,6 @@ namespace ddma.Controllers
             _context = context;
         }
 
-        /// <summary>
-        /// Φέρνει τα assignment groups της εταιρείας.
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("company/{companyId}")]
-        public IEnumerable<TaskAssignmentGroup> GetTaskAssignmentGroups(int companyId)
-        {
-            return _context.TaskAssignmentGroups.Where(x => x.CompanyId == companyId).ToList();
-        }
-
         // GET: api/TaskAssignmentGroups/5
         /// <summary>
         /// Θα καλείται όταν ο χρήστης θέλει να δει τα task ενός task group.

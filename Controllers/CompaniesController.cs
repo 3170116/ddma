@@ -42,6 +42,82 @@ namespace ddma.Controllers
             return company;
         }
 
+        /// <summary>
+        /// Επιστρέφει τη λίστα με τους εργαζόμενους της εταιρείας.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        // PUT: /companies/{id}/users
+        [HttpGet("{id}/users")]
+        public IEnumerable<User> GetUsers(int id)
+        {
+            var company = _context.Companies.Include(x => x.Users).SingleOrDefault(x => x.Id == id);
+
+            if (company == null)
+            {
+                HttpContext.Response.StatusCode = 404;
+                return null;
+            }
+
+            return company.Users.ToList();
+        }
+
+        // PUT: /companies/{id}/taskAssignmentGroups
+        [HttpGet("{id}/users")]
+        public IEnumerable<TaskAssignmentGroup> GetTaskAssignmentGroups(int id)
+        {
+            var company = _context.Companies.Include(x => x.TaskAssignmentGroups).SingleOrDefault(x => x.Id == id);
+
+            if (company == null)
+            {
+                HttpContext.Response.StatusCode = 404;
+                return null;
+            }
+
+            return company.TaskAssignmentGroups.ToList();
+        }
+
+        /// <summary>
+        /// Φέρνει πίσω τα tasks της εταιρείας.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}/tasksAssignments")]
+        public IEnumerable<TaskAssignment> GetTasksAssignments(int id)
+        {
+            //οι υπάλληλοι της εταιρείας
+            var company = _context.Companies.Include("TaskAssignmentGroups.TaskAssignments").SingleOrDefault(x => x.Id == id);
+
+            if (company == null)
+            {
+                HttpContext.Response.StatusCode = 404;
+                return null;
+            }
+
+            IList<TaskAssignment> result = new List<TaskAssignment>();
+
+            foreach (var group in company.TaskAssignmentGroups)
+            {
+                foreach (var taskAssignment in group.TaskAssignments.ToList())
+                {
+                    result.Add(taskAssignment);
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Επιστρέφει τα assets της εταιρίας.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}/assets")]
+        public IEnumerable<Asset> GetAssets(int id)
+        {
+            return _context.Assets.Include(x => x.Location).Where(x => x.CompanyId == id).ToList();
+        }
+
         // PUT: /Companies/{id}
         [HttpPut("{id}")]
         public Company PutCompany(int id, Company company)

@@ -20,47 +20,6 @@ namespace ddma.Controllers
             _context = context;
         }
 
-        /// <summary>
-        /// Φέρνει πίσω τα task που έχει αναλάβει ο συγκεκριμένος χρήστης.
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        [HttpGet("user/tasks/{userId}")]
-        public IEnumerable<TaskAssignment> GetTaskAssignmentUser(int userId)
-        {
-            return _context.TaskAssignmentUsers.Include("TaskAssignment").Where(x => x.UserId == userId).Select(x => x.TaskAssignment).ToList();
-        }
-
-        /// <summary>
-        /// Φέρνει πίσω τα tasks της εταιρείας.
-        /// </summary>
-        /// <param name="companyId"></param>
-        /// <returns></returns>
-        [HttpGet("company/tasks/{companyId}")]
-        public IEnumerable<TaskAssignment> GetTasks(int companyId)
-        {
-            //οι υπάλληλοι της εταιρείας
-            var company = _context.Companies.Include("TaskAssignmentGroups.TaskAssignments").SingleOrDefault(x => x.Id == companyId);
-
-            if (company == null)
-            {
-                HttpContext.Response.StatusCode = 404;
-                return null;
-            }
-
-            IList<TaskAssignment> result = new List<TaskAssignment>();
-
-            foreach (var group in company.TaskAssignmentGroups)
-            {
-                foreach (var taskAssignment in group.TaskAssignments.ToList())
-                {
-                    result.Add(taskAssignment);
-                }
-            }
-
-            return result;
-        }
-
         // POST: api/TaskAssignmentUsers
         /// <summary>
         /// Θα καλείται όταν κάνει ανάθεσει ο super-supervisor ή κάποιος supervisor ένα task σε έναν employee.
@@ -68,7 +27,7 @@ namespace ddma.Controllers
         /// <param name="companyId"></param>
         /// <param name="taskAssignmentUser"></param>
         /// <returns></returns>
-        [HttpPost("company/{companyId}")]
+        [HttpPost("{companyId}")]
         public int PostTaskAssignmentUser(int companyId, TaskAssignmentUser taskAssignmentUser)
         {
 

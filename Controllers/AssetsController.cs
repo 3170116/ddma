@@ -20,17 +20,6 @@ namespace ddma.Controllers
             _context = context;
         }
 
-        /// <summary>
-        /// Επιστρέφει τα assets της εταιρίας.
-        /// </summary>
-        /// <param name="companyId"></param>
-        /// <returns></returns>
-        [HttpGet("company/{companyId}")]
-        public IEnumerable<Asset> GetAssets(int companyId)
-        {
-            return _context.Assets.Include(x => x.Location).Where(x => x.CompanyId == companyId).ToList();
-        }
-
         // GET: api/Assets/5
         /// <summary>
         /// Επιστρέφει τις πληροφορίες ενός συγκεκριμένου asset.

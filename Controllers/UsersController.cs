@@ -21,33 +21,14 @@ namespace ddma.Controllers
         }
 
         /// <summary>
-        /// Επιστρέφει τη λίστα με τους εργαζόμενους της εταιρείας.
-        /// </summary>
-        /// <param name="companyId"></param>
-        /// <returns></returns>
-        [HttpGet("company/{companyId}")]
-        public IEnumerable<User> GetUsers(int companyId)
-        {
-            var comapny = _context.Companies.Include("Users").SingleOrDefault(x => x.Id == companyId);
-
-            if (comapny == null)
-            {
-                HttpContext.Response.StatusCode = 404;
-                return null;
-            }
-
-            return comapny.Users.ToList();
-        }
-
-        /// <summary>
         /// Θα καλείται όταν κάνει ο χρήστης login.
         /// </summary>
-        /// <param name="email"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("{email}")]
-        public Company GetUser(string email, User user)
+        [HttpGet("{id}")]
+        public User GetUser(int id)
         {
-            user = _context.Users.SingleOrDefault(x => x.Email == email && x.PasswordHash == user.PasswordHash);
+            var user = _context.Users.SingleOrDefault(x => x.Id == id);
 
             if (user == null)
             {
@@ -55,15 +36,18 @@ namespace ddma.Controllers
                 return null;
             }
 
-            var company = _context.Companies.Include("Users").Include("TaskAssignmentGroups").SingleOrDefault(x => x.Id == user.CompanyId);
+            return user;
+        }
 
-            if (company == null)
-            {
-                HttpContext.Response.StatusCode = 404;
-                return null;
-            }
-
-            return company;
+        /// <summary>
+        /// Φέρνει πίσω τα task που έχει αναλάβει ο συγκεκριμένος χρήστης.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        [HttpGet("{id}/taskAssignments")]
+        public IEnumerable<TaskAssignment> GetTaskAssignmentUser(int id)
+        {
+            return _context.TaskAssignmentUsers.Include("TaskAssignment").Where(x => x.UserId == id).Select(x => x.TaskAssignment).ToList();
         }
 
         /// <summary>
@@ -99,12 +83,30 @@ namespace ddma.Controllers
         }
 
         /// <summary>
+        /// Θα καλείται όταν κάνει ο χρήστης login.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        [HttpPost("login")]
+        public User GetUser(User user)
+        {
+            var loginUser = _context.Users.SingleOrDefault(x => x.Email == user.Email);
+
+            if (loginUser == null || loginUser.PasswordHash != user.PasswordHash)
+            {
+                HttpContext.Response.StatusCode = 404;
+                return null;
+            }
+
+            return loginUser;
+        }
+
+        /// <summary>
         /// Θα καλείται όταν εγγράφεται νέος χρήστης.
         /// </summary>
-        /// <param name="statusId"></param>
         /// <returns></returns>
-        [HttpPost("{roleId}")]
-        public User PostUser(int roleId, User user)
+        [HttpPost("signUp")]
+        public User PostUser(User user)
         {
 
             if (!user.IsValid())
@@ -126,8 +128,6 @@ namespace ddma.Controllers
                 HttpContext.Response.StatusCode = 400;
                 return null;
             }
-
-            user.SetRole(roleId);
 
             _context.Users.Add(user);
             _context.SaveChanges();
