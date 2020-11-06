@@ -15,8 +15,6 @@ namespace ddma.Models
 
         public string Name { get; set; }
 
-        public string TimeZone { get; set; }
-
         public virtual ICollection<User> Users { get; set; }
 
         public virtual ICollection<TaskAssignmentGroup> TaskAssignmentGroups { get; set; }
@@ -40,7 +38,7 @@ namespace ddma.Models
 
         public bool IsValid()
         {
-            return !String.IsNullOrEmpty(Name) && !String.IsNullOrEmpty(TimeZone);
+            return !String.IsNullOrEmpty(Name);
         }
 
     }

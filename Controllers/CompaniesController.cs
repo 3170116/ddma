@@ -137,7 +137,6 @@ namespace ddma.Controllers
             }
 
             editCompany.Name = company.Name;
-            editCompany.TimeZone = company.TimeZone;
 
             _context.SaveChanges();
 

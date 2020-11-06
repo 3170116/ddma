@@ -72,6 +72,7 @@ namespace ddma.Controllers
 
             editUser.PasswordHash = user.PasswordHash;
             editUser.NickName = user.NickName;
+            editUser.TimeZone = user.TimeZone;
 
             _context.SaveChanges();
 
