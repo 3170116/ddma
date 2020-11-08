@@ -41,5 +41,21 @@ namespace ddma.Models
             return !String.IsNullOrEmpty(Name);
         }
 
+        public IList<TaskAssignment> GetTaskAssignments()
+        {
+
+            IList<TaskAssignment> result = new List<TaskAssignment>();
+
+            foreach (var group in TaskAssignmentGroups)
+            {
+                foreach (var taskAssignment in group.TaskAssignments.ToList())
+                {
+                    result.Add(taskAssignment);
+                }
+            }
+
+            return result;
+        }
+
     }
 }

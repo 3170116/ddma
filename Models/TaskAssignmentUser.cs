@@ -18,6 +18,8 @@ namespace ddma.Models
 
         public int TaskAssignmentId { get; set; }
 
+        public int AssignedFromUserId { get; set; }
+
         public virtual User User { get; set; }
 
         public virtual TaskAssignment TaskAssignment { get; set; }

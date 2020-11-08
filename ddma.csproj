@@ -28,6 +28,12 @@
     <Compile Remove="Migrations\20201028110339_Test.Designer.cs" />
     <Compile Remove="Migrations\20201028111330_Test.cs" />
     <Compile Remove="Migrations\20201028111330_Test.Designer.cs" />
+    <Compile Remove="Migrations\20201108101751_AddAssignedFromUserIdToTaskAssignmentUser.cs" />
+    <Compile Remove="Migrations\20201108101751_AddAssignedFromUserIdToTaskAssignmentUser.Designer.cs" />
+    <Compile Remove="Migrations\20201108102021_AddAssignedFromUserIdToTaskAssignmentUser.cs" />
+    <Compile Remove="Migrations\20201108102021_AddAssignedFromUserIdToTaskAssignmentUser.Designer.cs" />
+    <Compile Remove="Migrations\20201108102139_AddAssignedFromUserIdToTaskAssignmentUser.cs" />
+    <Compile Remove="Migrations\20201108102139_AddAssignedFromUserIdToTaskAssignmentUser.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -85,7 +85,7 @@ namespace ddma.Controllers
         [HttpGet("{id}/tasksAssignments")]
         public IEnumerable<TaskAssignment> GetTasksAssignments(int id)
         {
-            //οι υπάλληλοι της εταιρείας
+
             var company = _context.Companies.Include("TaskAssignmentGroups.TaskAssignments").SingleOrDefault(x => x.Id == id);
 
             if (company == null)
@@ -94,17 +94,8 @@ namespace ddma.Controllers
                 return null;
             }
 
-            IList<TaskAssignment> result = new List<TaskAssignment>();
+            return company.GetTaskAssignments();
 
-            foreach (var group in company.TaskAssignmentGroups)
-            {
-                foreach (var taskAssignment in group.TaskAssignments.ToList())
-                {
-                    result.Add(taskAssignment);
-                }
-            }
-
-            return result;
         }
 
         /// <summary>
@@ -182,18 +173,44 @@ namespace ddma.Controllers
             }
 
             //ελέγχουμε αν ανήκει ο συγκεκριμένος χρήστης στην εταιρεία.
-            var company = _context.Companies.Include("Users").SingleOrDefault(x => x.Id == id);
+            var company = _context.Companies.Include("Users").Include("TaskAssignmentGroups.TaskAssignments").SingleOrDefault(x => x.Id == id);
 
-            if (company == null || !company.Users.Any(x => x.Id == taskAssignmentUser.UserId))
+            if (company == null || !company.Users.Any(x => x.Id == taskAssignmentUser.UserId) || !company.GetTaskAssignments().Any(x => x.Id == taskAssignmentUser.TaskAssignmentId))
             {
                 HttpContext.Response.StatusCode = 404;
                 return 0;
             }
 
+            //ελέγχουμε αν ανήκει ο χρήστης που αναθέτει το task στην εταιρεία και δεν είναι employee
+            var assignedFromUser = company.Users.SingleOrDefault(x => x.Id == taskAssignmentUser.AssignedFromUserId);
+            if (assignedFromUser == null)
+            {
+                HttpContext.Response.StatusCode = 404;
+                return 0;
+            }
+
+            if (assignedFromUser.RoleId == Enums.UserRole.EMPLOYEE)
+            {
+                HttpContext.Response.StatusCode = 403;
+                return 0;
+            }
+
 
             taskAssignmentUser.AssignedAt = DateTime.UtcNow;
+            
 
             _context.TaskAssignmentUsers.Add(taskAssignmentUser);
+
+            //αποθηκεύουμε την ενημέρωση που θα λάβει ο χρήστης
+            _context.UserNotifications.Add(new UserNotification()
+            {
+                UserId = taskAssignmentUser.UserId,
+                NotificationType = Enums.NotificationType.ASSIGNED_TASK,
+                CreatedAt = DateTime.UtcNow,
+                Title = "New Task Assignment",
+                Description = "The task with name " + company.GetTaskAssignments().Single(x => x.Id == taskAssignmentUser.TaskAssignmentId).Title + " has been assigned to you from " + assignedFromUser.NickName + "."
+            });
+
             _context.SaveChanges();
 
 
