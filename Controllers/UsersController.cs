@@ -25,6 +25,25 @@ namespace ddma.Controllers
         [HttpGet("{id}")]
         public User GetUser(int id)
         {
+            var user = _context.Users.Include(x => x.TaskAssignmentUsers).SingleOrDefault(x => x.Id == id);
+
+            if (user == null)
+            {
+                HttpContext.Response.StatusCode = 404;
+                return null;
+            }
+
+            return user;
+        }
+
+        /// <summary>
+        /// Επιστρέφει κάποιες βασικές πληροφορίες του χρήστη.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}/info")]
+        public User GetUserInfo(int id)
+        {
             var user = _context.Users.SingleOrDefault(x => x.Id == id);
 
             if (user == null)

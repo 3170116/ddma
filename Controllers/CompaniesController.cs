@@ -43,6 +43,25 @@ namespace ddma.Controllers
         }
 
         /// <summary>
+        /// Επιστρέφει κάποιες βασικές πληροφορίες της εταιρείας.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}/info")]
+        public Company GetCompanyInfo(int id)
+        {
+            var company = _context.Companies.SingleOrDefault(x => x.Id == id);
+
+            if (company == null)
+            {
+                HttpContext.Response.StatusCode = 404;
+                return null;
+            }
+
+            return company;
+        }
+
+        /// <summary>
         /// Επιστρέφει τη λίστα με τους εργαζόμενους της εταιρείας.
         /// </summary>
         /// <param name="id"></param>

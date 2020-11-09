@@ -4,9 +4,9 @@ namespace Enums
 
     public enum UserRole
     {
-        EMPLOYEE,
-        SUPERVISOR,
-        SUPERSUPERVISOR
+        SUPERSUPERVISOR = 0,
+        SUPERVISOR = 1,
+        EMPLOYEE = 2
     }
 
 }

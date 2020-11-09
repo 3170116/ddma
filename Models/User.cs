@@ -13,7 +13,7 @@ namespace ddma.Models
         [Key]
         public int Id { get; set; }
 
-        public int CompanyId { get; set; }
+        public int? CompanyId { get; set; }
 
         public string Email { get; set; }
 
