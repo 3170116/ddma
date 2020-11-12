@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ddma.Models;
 
 namespace ddma.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201112201817_AddLogsToDB")]
+    partial class AddLogsToDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,9 +61,6 @@ namespace ddma.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AssetId")
-                        .HasColumnType("int");
-
                     b.Property<int>("AssetLogType")
                         .HasColumnType("int");
 
@@ -71,6 +70,9 @@ namespace ddma.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("TaskAssignmentId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
@@ -79,7 +81,7 @@ namespace ddma.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AssetId");
+                    b.HasIndex("TaskAssignmentId");
 
                     b.HasIndex("UserId");
 
@@ -355,9 +357,9 @@ namespace ddma.Migrations
 
             modelBuilder.Entity("ddma.Models.AssetLog", b =>
                 {
-                    b.HasOne("ddma.Models.Asset", "Asset")
+                    b.HasOne("ddma.Models.TaskAssignment", "TaskAssignment")
                         .WithMany()
-                        .HasForeignKey("AssetId")
+                        .HasForeignKey("TaskAssignmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

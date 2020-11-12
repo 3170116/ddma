@@ -24,6 +24,8 @@ namespace ddma.Models
         public DbSet<Asset> Assets { get; set; }
         public DbSet<UserNotification> UserNotifications { get; set; }
         public DbSet<Location> Locations { get; set; }
+        public DbSet<TaskLog> TaskLogs { get; set; }
+        public DbSet<AssetLog> AssetLogs { get; set; }
 
     }
 }

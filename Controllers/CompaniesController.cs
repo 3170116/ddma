@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ddma.Models;
+using ddma.Summaries;
 
 namespace ddma.Controllers
 {
@@ -47,8 +48,8 @@ namespace ddma.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("{id}/info")]
-        public Company GetCompanyInfo(int id)
+        [HttpGet("{id}/summary")]
+        public CompanySummary GetCompanySummary(int id)
         {
             var company = _context.Companies.SingleOrDefault(x => x.Id == id);
 
@@ -58,7 +59,7 @@ namespace ddma.Controllers
                 return null;
             }
 
-            return company;
+            return new CompanySummary(company);
         }
 
         /// <summary>

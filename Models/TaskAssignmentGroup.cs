@@ -19,7 +19,7 @@ namespace ddma.Models
 
         public virtual Company Company { get; set; }
 
-        public virtual ICollection<TaskAssignment> TaskAssignments { get; set; }
+        public virtual ICollection<TaskAssignment> TaskAssignments { get; set; } = new List<TaskAssignment>();
 
         public bool IsValid()
         {

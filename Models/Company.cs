@@ -15,11 +15,11 @@ namespace ddma.Models
 
         public string Name { get; set; }
 
-        public virtual ICollection<User> Users { get; set; }
+        public virtual ICollection<User> Users { get; set; } = new List<User>();
 
-        public virtual ICollection<TaskAssignmentGroup> TaskAssignmentGroups { get; set; }
+        public virtual ICollection<TaskAssignmentGroup> TaskAssignmentGroups { get; set; } = new List<TaskAssignmentGroup>();
 
-        public virtual ICollection<Asset> Assets { get; set; }
+        public virtual ICollection<Asset> Assets { get; set; } = new List<Asset>();
 
         public User GetSuperSupervisor()
         {

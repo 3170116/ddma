@@ -30,11 +30,11 @@ namespace ddma.Models
 
         public virtual TaskAssignmentGroup TaskAssignmentGroup { get; set; }
 
-        public virtual ICollection<TaskAssignmentUser> TaskAssignmentUsers { get; set; }
+        public virtual ICollection<TaskAssignmentUser> TaskAssignmentUsers { get; set; } = new List<TaskAssignmentUser>();
 
-        public virtual ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 
-        public virtual ICollection<TaskLog> TaskLogs { get; set; }
+        public virtual ICollection<TaskLog> TaskLogs { get; set; } = new List<TaskLog>();
 
 
         public void setStatus(int statusId)

@@ -27,11 +27,11 @@ namespace ddma.Models
 
         public Company Company { get; set; }
 
-        public ICollection<TaskAssignmentUser> TaskAssignmentUsers { get; set; }
+        public ICollection<TaskAssignmentUser> TaskAssignmentUsers { get; set; } = new List<TaskAssignmentUser>();
 
-        public ICollection<UserNotification> UserNotifications { get; set; }
+        public ICollection<UserNotification> UserNotifications { get; set; } = new List<UserNotification>();
 
-        public ICollection<TaskLog> TaskLogs { get; set; }
+        public ICollection<TaskLog> TaskLogs { get; set; } = new List<TaskLog>();
 
 
         public void SetRole(int roleId)

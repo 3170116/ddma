@@ -34,6 +34,8 @@
     <Compile Remove="Migrations\20201108102021_AddAssignedFromUserIdToTaskAssignmentUser.Designer.cs" />
     <Compile Remove="Migrations\20201108102139_AddAssignedFromUserIdToTaskAssignmentUser.cs" />
     <Compile Remove="Migrations\20201108102139_AddAssignedFromUserIdToTaskAssignmentUser.Designer.cs" />
+    <Compile Remove="Migrations\20201112201633_AddAssetLogToDB.cs" />
+    <Compile Remove="Migrations\20201112201633_AddAssetLogToDB.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
