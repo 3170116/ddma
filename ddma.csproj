@@ -36,9 +36,12 @@
     <Compile Remove="Migrations\20201108102139_AddAssignedFromUserIdToTaskAssignmentUser.Designer.cs" />
     <Compile Remove="Migrations\20201112201633_AddAssetLogToDB.cs" />
     <Compile Remove="Migrations\20201112201633_AddAssetLogToDB.Designer.cs" />
+    <Compile Remove="Migrations\20201114203300_Test.cs" />
+    <Compile Remove="Migrations\20201114203300_Test.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.9" />

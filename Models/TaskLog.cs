@@ -17,9 +17,9 @@ namespace ddma.Models
 
         public int UserId { get; set; }
 
-        public DateTime CreatedAt { get; set; }
-
         public TaskLogType TaskLogType { get; set; }
+
+        public DateTime CreatedAt { get; set; }
 
         public string Title { get; set; }
 

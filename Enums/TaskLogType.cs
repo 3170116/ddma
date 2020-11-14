@@ -6,7 +6,6 @@ namespace Enums
     {
         ADDED = 0,
         EDIT = 1,
-        DELETED = 2,
         CHANGED_STATUS = 3,
         CHANGED_PRIORITY = 4,
         CHANGED_DEADLINE = 5,

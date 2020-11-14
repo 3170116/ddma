@@ -34,29 +34,6 @@ namespace ddma.Controllers
             return comments;
         }
 
-        // POST: api/Comments
-        /// <summary>
-        /// Θα καλείται όταν ο χρήστης προσθέτει ένα comment σε ένα task.
-        /// </summary>
-        /// <param name="comment"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public Comment PostComment(Comment comment)
-        {
-
-            if (!comment.IsValid())
-            {
-                HttpContext.Response.StatusCode = 400;
-                return null;
-            }
-
-            _context.Comments.Add(comment);
-            _context.SaveChanges();
-
-            return comment;
-
-        }
-
         // DELETE: api/Comments/5
         /// <summary>
         /// Θα καλείται όταν ο super-supervisor ή κάποιος supervisor διαγράφει ένα comment.
