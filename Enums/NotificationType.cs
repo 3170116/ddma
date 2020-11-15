@@ -9,14 +9,11 @@ namespace Enums
         UNASSIGNED_TASK = 2,
         CHANGED_TASK_STATUS = 3,
         CHANGED_TASK_PRIORITY = 4,
-        ADDED_COMMENT = 5,
-        ADDED_ASSET = 6,
-        EDIT_ASSET = 7,
-        REMOVED_ASSET = 8,
-        ADDED_TASK_GROUP = 9,
-        REMOVED_TASK_GROUP = 10,
-        ADDED_NEW_USER = 11,
-        REMOVED_USER = 12
+        CHANGED_TASK_DEADLINE = 5,
+        CHANGED_TASK_GROUP = 6,
+        ADDED_COMMENT = 7,
+        ADDED_NEW_USER = 8,
+        REMOVED_USER = 9
     }
 
 }

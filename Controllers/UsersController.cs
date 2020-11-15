@@ -227,7 +227,7 @@ namespace ddma.Controllers
                 return null;
             }
 
-            var editTask = _context.TaskAssignments.Include(x => x.TaskAssignmentGroup).SingleOrDefault(x => x.Id == taskAssignmentId);
+            var editTask = _context.TaskAssignments.Include(x => x.TaskAssignmentGroup).Include(x => x.TaskAssignmentUsers).SingleOrDefault(x => x.Id == taskAssignmentId);
 
             if (editTask == null)
             {
@@ -243,24 +243,29 @@ namespace ddma.Controllers
 
 
             var logType = Enums.TaskLogType.EDIT;
+            var notificationType = Enums.NotificationType.EDIT_TASK;
             var logDescr = "";
             
             if (editTask.Priority != taskAssignment.Priority)
             {
                 logType = Enums.TaskLogType.CHANGED_PRIORITY;
+                notificationType = Enums.NotificationType.CHANGED_TASK_PRIORITY;
                 logDescr = "Priority changed from " + Enum.GetName(typeof(Enums.TaskAssignmentPriority), editTask.Priority) + " to " + Enum.GetName(typeof(Enums.TaskAssignmentPriority), taskAssignment.Priority);
             } else if (editTask.Status != taskAssignment.Status)
             {
                 logType = Enums.TaskLogType.CHANGED_STATUS;
+                notificationType = Enums.NotificationType.CHANGED_TASK_STATUS;
                 logDescr = "Status changed from " + Enum.GetName(typeof(Enums.TaskAssignmentStatus), editTask.Status) + " to " + Enum.GetName(typeof(Enums.TaskAssignmentStatus), taskAssignment.Status);
             }
             else if (editTask.Deadline != taskAssignment.Deadline)
             {
                 logType = Enums.TaskLogType.CHANGED_DEADLINE;
+                notificationType = Enums.NotificationType.CHANGED_TASK_DEADLINE;
                 logDescr = "Deadline changed from " + editTask.Deadline == null ? "" : editTask.Deadline.ToString() + " to " + taskAssignment.Deadline == null ? "" : taskAssignment.Deadline.ToString();
             } else if (editTask.TaskAssignmentGroupId != taskAssignment.TaskAssignmentGroupId)
             {
                 logType = Enums.TaskLogType.CHANGED_TASK_GROUP;
+                notificationType = Enums.NotificationType.CHANGED_TASK_GROUP;
                 logDescr = "Task moved from group '" + editTask.TaskAssignmentGroup.Name + "' to '" + taskAssignment.TaskAssignmentGroup.Name + "'";
             }
 
@@ -271,6 +276,19 @@ namespace ddma.Controllers
             editTask.Deadline = taskAssignment.Deadline;
 
             editTask.TaskAssignmentGroupId = taskAssignment.TaskAssignmentGroupId;
+
+
+            foreach (var taskAssignmentUser in editTask.TaskAssignmentUsers)
+            {
+                _context.UserNotifications.Add(new UserNotification()
+                {
+                    UserId = taskAssignmentUser.UserId,
+                    NotificationType = notificationType,
+                    CreatedAt = DateTime.UtcNow,
+                    Title = "Edit Task Assignment",
+                    Description = "The task with name " + editTask.Title + " has been edit from user '" + user.NickName + "'."
+                });
+            }
 
             _context.TaskLogs.Add(new TaskLog()
             {
@@ -334,6 +352,19 @@ namespace ddma.Controllers
             }
 
             _context.Users.Add(user);
+
+            foreach (var companyUser in company.Users)
+            {
+                _context.UserNotifications.Add(new UserNotification()
+                {
+                    UserId = companyUser.Id,
+                    NotificationType = Enums.NotificationType.ADDED_NEW_USER,
+                    CreatedAt = DateTime.UtcNow,
+                    Title = "New User",
+                    Description = "User '" + companyUser.NickName + "' added to company by '" + user.NickName + "'."
+                });
+            }
+
             _context.SaveChanges();
 
             return user;
@@ -497,7 +528,6 @@ namespace ddma.Controllers
 
             _context.TaskAssignmentUsers.Add(taskAssignmentUser);
 
-            //αποθηκεύουμε την ενημέρωση που θα λάβει ο χρήστης
             _context.UserNotifications.Add(new UserNotification()
             {
                 UserId = taskAssignmentUser.UserId,
@@ -535,8 +565,9 @@ namespace ddma.Controllers
         {
 
             var user = _context.Users.SingleOrDefault(x => x.Id == id);
+            var taskAssignment = _context.TaskAssignments.Include(x => x.TaskAssignmentUsers).SingleOrDefault(x => x.Id == comment.TaskAssignmentId);
 
-            if (user == null)
+            if (user == null || taskAssignment == null)
             {
                 HttpContext.Response.StatusCode = 404;
                 return null;
@@ -549,6 +580,18 @@ namespace ddma.Controllers
             }
 
             _context.Comments.Add(comment);
+
+            foreach (var taskAssignmentUser in taskAssignment.TaskAssignmentUsers)
+            {
+                _context.UserNotifications.Add(new UserNotification()
+                {
+                    UserId = taskAssignmentUser.UserId,
+                    NotificationType = Enums.NotificationType.ADDED_COMMENT,
+                    CreatedAt = DateTime.UtcNow,
+                    Title = "Added Comment",
+                    Description = "User '" + user.NickName + "' added a new comment to task '" + taskAssignment.Title + "'."
+                });
+            }
 
             _context.TaskLogs.Add(new TaskLog()
             {
@@ -592,6 +635,15 @@ namespace ddma.Controllers
                 return 0;
             }
 
+            _context.UserNotifications.Add(new UserNotification()
+            {
+                UserId = taskAssignmentUser.UserId,
+                NotificationType = Enums.NotificationType.UNASSIGNED_TASK,
+                CreatedAt = DateTime.UtcNow,
+                Title = "Remove Task Assignment",
+                Description = "The task with name " + taskAssignmentUser.TaskAssignment.Title + " is not assigned to you yet. User '" + user.NickName + "' removed your assignment."
+            });
+
             _context.TaskLogs.Add(new TaskLog()
             {
                 TaskAssignmentId = taskAssignmentUserId,
@@ -620,11 +672,24 @@ namespace ddma.Controllers
         {
 
             var user = _context.Users.SingleOrDefault(x => x.Id == id);
+            var company = _context.Companies.Include(x => x.Users).SingleOrDefault(x => x.Id == user.CompanyId);
 
             if (user == null)
             {
                 HttpContext.Response.StatusCode = 404;
                 return 0;
+            }
+
+            foreach (var companyUser in company.Users.Where(x => x.Id != id))
+            {
+                _context.UserNotifications.Add(new UserNotification()
+                {
+                    UserId = companyUser.Id,
+                    NotificationType = Enums.NotificationType.REMOVED_USER,
+                    CreatedAt = DateTime.UtcNow,
+                    Title = "Removed User",
+                    Description = "User '" + user.NickName + "' removed from company."
+                });
             }
 
             _context.Users.Remove(user);
