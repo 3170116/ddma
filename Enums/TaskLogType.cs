@@ -12,7 +12,8 @@ namespace Enums
         CHANGED_TASK_GROUP = 6,
         ADDED_USER = 7,
         REMOVED_USER = 8,
-        ADDED_COMMENT = 9
+        ADDED_COMMENT = 9,
+        ADDED_ASSET_TO_TASK = 10
     }
 
 }

@@ -22,9 +22,11 @@ namespace ddma.Models
 
         public DateTime CreatedAt { get; set; }
 
-        public Company Company { get; set; }
+        public virtual Company Company { get; set; }
 
-        public Location Location { get; set; }
+        public virtual Location Location { get; set; }
+
+        public virtual ICollection<TaskAssignmentAsset> TaskAssignmentAssets { get; set; } = new List<TaskAssignmentAsset>();
 
         public bool IsValid()
         {

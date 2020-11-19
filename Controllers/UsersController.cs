@@ -524,7 +524,7 @@ namespace ddma.Controllers
 
 
             taskAssignmentUser.AssignedAt = DateTime.UtcNow;
-
+            taskAssignmentUser.UserId = user.Id;
 
             _context.TaskAssignmentUsers.Add(taskAssignmentUser);
 
@@ -551,6 +551,91 @@ namespace ddma.Controllers
 
 
             return taskAssignmentUser.Id;
+
+        }
+
+        /// <summary>
+        /// Θα καλείται όταν συνδέει ο χρήστης ένα task με ένα asset.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="taskAssignmentUser"></param>
+        /// <returns></returns>
+        [HttpPost("{id}/TaskAssignmentAssets")]
+        public int PostTaskAssignmentAsset(int id, TaskAssignmentAsset taskAssignmentAsset)
+        {
+
+            var user = _context.Users.SingleOrDefault(x => x.Id == id);
+
+            if (user == null)
+            {
+                HttpContext.Response.StatusCode = 404;
+                return 0;
+            }
+
+            var company = _context.Companies.Include(x => x.Users).Include(x => x.Assets).SingleOrDefault(x => x.Id == user.CompanyId);
+
+            if (company == null)
+            {
+                HttpContext.Response.StatusCode = 404;
+                return 0;
+            }
+
+            if (!company.Users.Any(x => x.Id == user.Id))
+            {
+                HttpContext.Response.StatusCode = 403;
+                return 0;
+            }
+
+            if (!company.Assets.Any(x => x.Id == taskAssignmentAsset.AssetId))
+            {
+                HttpContext.Response.StatusCode = 403;
+                return 0;
+            }
+
+            var taskAssignment = _context.TaskAssignments.Include(x => x.TaskAssignmentUsers).Include(x => x.TaskAssignmentAssets).SingleOrDefault(x => x.Id == taskAssignmentAsset.TaskAssignmentId);
+
+            if (taskAssignment == null)
+            {
+                HttpContext.Response.StatusCode = 404;
+                return 0;
+            }
+
+            //ελέγχουμε αν συνδέονται ήδη το task με το asset
+            if (taskAssignment.TaskAssignmentAssets.Any(x => x.AssetId == taskAssignmentAsset.AssetId))
+            {
+                HttpContext.Response.StatusCode = 400;
+                return 0;
+            }
+
+            taskAssignmentAsset.UserId = user.Id;
+            _context.TaskAssignmentAssets.Add(taskAssignmentAsset);
+
+            foreach (var taskUser in taskAssignment.TaskAssignmentUsers.Where(x => x.UserId != user.Id))
+            {
+                _context.UserNotifications.Add(new UserNotification()
+                {
+                    UserId = id,
+                    NotificationType = Enums.NotificationType.ADDED_ASSET_TO_TASK,
+                    CreatedAt = DateTime.UtcNow,
+                    Title = "Added Asset to Task",
+                    Description = "The asset with name " + company.Assets.Single(x => x.Id == taskAssignmentAsset.AssetId).Name + " has been added to task '" + taskAssignment.Title + "' from '" + user.NickName+ "'."
+                });
+            }
+            
+            _context.TaskLogs.Add(new TaskLog()
+            {
+                TaskAssignmentId = taskAssignment.Id,
+                UserId = id,
+                TaskLogType = Enums.TaskLogType.ADDED_ASSET_TO_TASK,
+                CreatedAt = DateTime.UtcNow,
+                Title = "User '" + user.NickName + "' added asset '" + company.Assets.Single(x => x.Id == taskAssignmentAsset.AssetId).Name + "'.",
+                Description = ""
+            });
+
+            _context.SaveChanges();
+
+
+            return taskAssignmentAsset.Id;
 
         }
 
@@ -615,7 +700,7 @@ namespace ddma.Controllers
         /// <param name="id"></param>
         /// <param name="taskAssignmentUserId"></param>
         /// <returns></returns>
-        [HttpDelete("{id}/TaskAssignmentUser/{taskAssignmentUserId}")]
+        [HttpDelete("{id}/TaskAssignmentUsers/{taskAssignmentUserId}")]
         public int DeleteTaskAssignmentUser(int id, int taskAssignmentUserId)
         {
 
@@ -656,6 +741,53 @@ namespace ddma.Controllers
 
             _context.TaskAssignmentUsers.Remove(taskAssignmentUser);
 
+            _context.SaveChanges();
+
+            return id;
+
+        }
+
+        /// <summary>
+        /// Θα καλείται όταν αφαιρεί ένα asset από ένα task.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="taskAssignmentUserId"></param>
+        /// <returns></returns>
+        [HttpDelete("{id}/TaskAssignmentAssets/{taskAssignmentAssetId}")]
+        public int DeleteTaskAssignmentAsset(int id, int taskAssignmentAssetId)
+        {
+
+            var user = _context.Users.SingleOrDefault(x => x.Id == id);
+            var company = _context.Companies.Include("TaskAssignmentGroups.TaskAssignments").Include(x => x.Assets).SingleOrDefault(x => x.Id == user.CompanyId);
+
+            if (user == null)
+            {
+                HttpContext.Response.StatusCode = 404;
+                return 0;
+            }
+
+            if (company == null)
+            {
+                HttpContext.Response.StatusCode = 404;
+                return 0;
+            }
+
+            var taskAssignmentAsset = _context.TaskAssignmentAssets.SingleOrDefault(x => x.Id == taskAssignmentAssetId);
+
+            if (taskAssignmentAsset == null)
+            {
+                HttpContext.Response.StatusCode = 404;
+                return 0;
+            }
+
+            //ελέγχουμε αν το task και το asset ανήκουν στην εταιρεία του χρήστη
+            if (!company.GetTaskAssignments().Any(x => x.Id == taskAssignmentAsset.TaskAssignmentId) || !company.Assets.Any(x => x.Id == taskAssignmentAsset.AssetId))
+            {
+                HttpContext.Response.StatusCode = 403;
+                return 0;
+            }
+
+            _context.TaskAssignmentAssets.Remove(taskAssignmentAsset);
             _context.SaveChanges();
 
             return id;

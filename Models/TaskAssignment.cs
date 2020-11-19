@@ -32,6 +32,8 @@ namespace ddma.Models
 
         public virtual ICollection<TaskAssignmentUser> TaskAssignmentUsers { get; set; } = new List<TaskAssignmentUser>();
 
+        public virtual ICollection<TaskAssignmentAsset> TaskAssignmentAssets { get; set; } = new List<TaskAssignmentAsset>();
+
         public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 
         public virtual ICollection<TaskLog> TaskLogs { get; set; } = new List<TaskLog>();

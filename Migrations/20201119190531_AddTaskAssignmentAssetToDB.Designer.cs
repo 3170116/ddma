@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ddma.Models;
 
 namespace ddma.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201119190531_AddTaskAssignmentAssetToDB")]
+    partial class AddTaskAssignmentAssetToDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -207,7 +209,7 @@ namespace ddma.Migrations
                     b.Property<int>("AssetId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TaskAssignmentId")
+                    b.Property<int?>("TaskAssignmentId")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
@@ -215,9 +217,9 @@ namespace ddma.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AssetId");
-
                     b.HasIndex("TaskAssignmentId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("TaskAssignmentAssets");
                 });
@@ -419,15 +421,13 @@ namespace ddma.Migrations
 
             modelBuilder.Entity("ddma.Models.TaskAssignmentAsset", b =>
                 {
-                    b.HasOne("ddma.Models.Asset", "Asset")
-                        .WithMany("TaskAssignmentAssets")
-                        .HasForeignKey("AssetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("ddma.Models.TaskAssignment", "TaskAssignment")
-                        .WithMany("TaskAssignmentAssets")
-                        .HasForeignKey("TaskAssignmentId")
+                        .WithMany()
+                        .HasForeignKey("TaskAssignmentId");
+
+                    b.HasOne("ddma.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
