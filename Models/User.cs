@@ -33,6 +33,9 @@ namespace ddma.Models
 
         public ICollection<TaskLog> TaskLogs { get; set; } = new List<TaskLog>();
 
+        [InverseProperty("User")]
+        public ICollection<TaskAssignment> TaskAssignments { get; set; }
+
 
         public void SetRole(int roleId)
         {
@@ -52,6 +55,11 @@ namespace ddma.Models
 
         public bool IsValid()
         {
+            if (RoleId == UserRole.SUPERSUPERVISOR && CompanyId == null)
+            {
+                return false;
+            }
+
             return !String.IsNullOrEmpty(Email) && !String.IsNullOrEmpty(NickName);
         }
 

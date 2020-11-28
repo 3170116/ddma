@@ -38,6 +38,14 @@
     <Compile Remove="Migrations\20201112201633_AddAssetLogToDB.Designer.cs" />
     <Compile Remove="Migrations\20201114203300_Test.cs" />
     <Compile Remove="Migrations\20201114203300_Test.Designer.cs" />
+    <Compile Remove="Migrations\20201126161949_AddCreatedByFKToTaskAssignment.cs" />
+    <Compile Remove="Migrations\20201126161949_AddCreatedByFKToTaskAssignment.Designer.cs" />
+    <Compile Remove="Migrations\20201126162110_AddCreatedByFKToTaskAssignment.cs" />
+    <Compile Remove="Migrations\20201126162110_AddCreatedByFKToTaskAssignment.Designer.cs" />
+    <Compile Remove="Migrations\20201126162329_AddCreatedByFKToTaskAssignment.cs" />
+    <Compile Remove="Migrations\20201126162329_AddCreatedByFKToTaskAssignment.Designer.cs" />
+    <Compile Remove="Migrations\20201126162435_AddCreatedByFKToTaskAssignment.cs" />
+    <Compile Remove="Migrations\20201126162435_AddCreatedByFKToTaskAssignment.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

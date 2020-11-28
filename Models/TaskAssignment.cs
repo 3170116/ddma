@@ -14,6 +14,10 @@ namespace ddma.Models
         [Key]
         public int Id { get; set; }
 
+        public int TaskAssignmentGroupId { get; set; }
+
+        public int CreatedBy { get; set; }
+
         public string Title { get; set; }
 
         public string Description { get; set; }
@@ -26,9 +30,10 @@ namespace ddma.Models
 
         public TaskAssignmentStatus Status { get; set; }
 
-        public int TaskAssignmentGroupId { get; set; }
-
         public virtual TaskAssignmentGroup TaskAssignmentGroup { get; set; }
+
+        [ForeignKey("CreatedBy")]
+        public virtual User User { get; set; }
 
         public virtual ICollection<TaskAssignmentUser> TaskAssignmentUsers { get; set; } = new List<TaskAssignmentUser>();
 

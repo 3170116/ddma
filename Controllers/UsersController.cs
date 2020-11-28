@@ -26,7 +26,7 @@ namespace ddma.Controllers
         [HttpGet("{id}")]
         public User GetUser(int id)
         {
-            var user = _context.Users.Include(x => x.TaskAssignmentUsers).SingleOrDefault(x => x.Id == id);
+            var user = _context.Users.Include(x => x.Company).SingleOrDefault(x => x.Id == id);
 
             if (user == null)
             {
@@ -337,35 +337,38 @@ namespace ddma.Controllers
                 return null;
             }
 
-            var company = _context.Companies.Include(x => x.Users).Single(x => x.Id == user.CompanyId);
-
-            if (company == null)
-            {
-                HttpContext.Response.StatusCode = 404;
-                return null;
-            }
-
             if (_context.Users.Any(x => x.Email == user.Email))
             {
                 HttpContext.Response.StatusCode = 400;
                 return null;
             }
 
-            _context.Users.Add(user);
-
-            foreach (var companyUser in company.Users)
+            if (user.CompanyId != null)
             {
-                _context.UserNotifications.Add(new UserNotification()
+                var company = _context.Companies.Include(x => x.Users).Single(x => x.Id == user.CompanyId);
+
+                if (company == null)
                 {
-                    UserId = companyUser.Id,
-                    NotificationType = Enums.NotificationType.ADDED_NEW_USER,
-                    CreatedAt = DateTime.UtcNow,
-                    Title = "New User",
-                    Description = "User '" + companyUser.NickName + "' added to company by '" + user.NickName + "'."
-                });
+                    HttpContext.Response.StatusCode = 404;
+                    return null;
+                }
+
+                foreach (var companyUser in company.Users)
+                {
+                    _context.UserNotifications.Add(new UserNotification()
+                    {
+                        UserId = companyUser.Id,
+                        NotificationType = Enums.NotificationType.ADDED_NEW_USER,
+                        CreatedAt = DateTime.UtcNow,
+                        Title = "New User",
+                        Description = "User '" + companyUser.NickName + "' added to company by '" + user.NickName + "'."
+                    });
+                }
             }
 
+            _context.Users.Add(user);
             _context.SaveChanges();
+
 
             return user;
 
@@ -449,8 +452,8 @@ namespace ddma.Controllers
                 return null;
             }
 
+            taskAssignment.CreatedBy = id;
             taskAssignment.setStatus(0);
-
             taskAssignment.CreatedAt = DateTime.UtcNow;
 
             _context.TaskAssignments.Add(taskAssignment);
